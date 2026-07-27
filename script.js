@@ -5,21 +5,35 @@ const output = document.getElementById("output");
 const colorPicker = document.getElementById("polygonColor");
 const colorValue = document.getElementById("colorValue");
 
+const groupFileInput = document.getElementById("groupFiles");
+const convertGroupBtn = document.getElementById("convertGroupBtn");
+
+const groupColorPicker = document.getElementById("groupPolygonColor");
+const groupColorValue = document.getElementById("groupColorValue");
+
 colorPicker.addEventListener("input", () => {
     colorValue.textContent = colorPicker.value;
 });
 
 convertBtn.addEventListener("click", convertKML);
 
+groupColorPicker.addEventListener("input", () => {
+    groupColorValue.textContent = groupColorPicker.value;
+});
+
+convertGroupBtn.addEventListener("click", convertGroup);
+
 async function convertKML() {
 
     const file = fileInput.files[0];
-    const geofenceName = file.name.replace(/\.[^/.]+$/, "");
 
     if (!file) {
         alert("Please choose a KML file.");
         return;
     }
+
+    const geofenceName =
+        file.name.replace(/\.[^/.]+$/, "");
 
     const text = await file.text();
 
@@ -68,6 +82,82 @@ async function convertKML() {
     output.textContent = JSON.stringify(result, null, 4);
 
     downloadGexp(result, geofenceName);
+
+}
+
+async function convertGroup() {
+
+    const files = [...groupFileInput.files];
+
+    if (files.length === 0) {
+        alert("Please choose one or more KML files.");
+        return;
+    }
+
+    const groupTitle = document.getElementById("groupTitle").value.trim();
+
+    if (!groupTitle) {
+        alert("Please enter a Group Title.");
+        return;
+    }
+
+    const polygonColor = groupColorPicker.value;
+
+    const result = {
+
+        groups: [
+            {
+                id: 1,
+                title: groupTitle
+            }
+        ],
+
+        geofences: []
+
+    };
+
+    let geofenceId = 1;
+
+    for (const file of files) {
+
+        const text = await file.text();
+
+        const parser = new DOMParser();
+
+        const xml = parser.parseFromString(text, "text/xml");
+
+        const placemarks = xml.getElementsByTagName("Placemark");
+
+        const geofenceName =
+            file.name.replace(/\.kml$/i, "");
+
+        for (const placemark of placemarks) {
+
+            const geofence = parsePlacemark(
+
+                placemark,
+
+                geofenceId++,
+
+                1,
+
+                polygonColor,
+
+                geofenceName
+
+            );
+
+            if (geofence)
+                result.geofences.push(geofence);
+
+        }
+
+    }
+
+    output.textContent =
+        JSON.stringify(result, null, 4);
+
+    downloadGexp(result, groupTitle);
 
 }
 

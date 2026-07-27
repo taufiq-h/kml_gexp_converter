@@ -12,52 +12,123 @@
 <div class="container">
 
     <h1>KML → GEXP Converter</h1>
+
     <p class="subtitle">
         Convert Google Earth KML polygons into GEXP geofence files.
     </p>
 
-    <div class="card">
+    <!-- Tabs -->
 
-        <label>KML File</label>
-        <input
-            type="file"
-            id="kmlFile"
-            accept=".kml"
-        >
+    <div class="tabs">
 
-        <label>Polygon Name</label>
-        <input
-            type="text"
-            id="groupName"
-            placeholder="Example: PP Site Mempawah"
-        >
+        <button
+            class="tab active"
+            data-tab="singleTab">
+            Single Geofence
+        </button>
 
-        <!-- <label>Group ID</label>
-        <input
-            type="number"
-            id="groupId"
-            value="1"
-        > -->
-
-        <label>Polygon Color</label>
-
-        <div class="colorRow">
-            <input
-                type="color"
-                id="polygonColor"
-                value="#724646"
-            >
-
-            <span id="colorValue">
-                #724646
-            </span>
-        </div>
-
-        <button id="convertBtn">
-            Convert
+        <button
+            class="tab"
+            data-tab="groupTab">
+            Geofence Group
         </button>
 
     </div>
+
+    <!-- ========================= -->
+    <!-- SINGLE -->
+    <!-- ========================= -->
+
+    <div id="singleTab" class="tab-content active">
+
+        <div class="card">
+
+            <label>KML File</label>
+
+            <input
+                type="file"
+                id="kmlFile"
+                accept=".kml">
+
+            <label>Group Title</label>
+
+            <input
+                type="text"
+                id="groupName"
+                placeholder="Example : PP Site Mempawah">
+
+            <label>Polygon Color</label>
+
+            <div class="colorRow">
+
+                <input
+                    type="color"
+                    id="polygonColor"
+                    value="#724646">
+
+                <span id="colorValue">
+                    #724646
+                </span>
+
+            </div>
+
+            <button id="convertBtn">
+                Convert
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- GROUP -->
+    <!-- ========================= -->
+
+    <div id="groupTab" class="tab-content">
+
+        <div class="card">
+
+            <label>KML Files</label>
+
+            <input
+                type="file"
+                id="groupFiles"
+                accept=".kml"
+                multiple>
+
+            <label>Group Title</label>
+
+            <input
+                type="text"
+                id="groupTitle"
+                placeholder="Example : PP Site Mempawah">
+
+            <label>Polygon Color</label>
+
+            <div class="colorRow">
+
+                <input
+                    type="color"
+                    id="groupPolygonColor"
+                    value="#724646">
+
+                <span id="groupColorValue">
+                    #724646
+                </span>
+
+            </div>
+
+            <button id="convertGroupBtn">
+                Convert Group
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- RESULT -->
+    <!-- ========================= -->
 
     <div class="card">
 
@@ -72,6 +143,30 @@ Waiting for conversion...
 </div>
 
 <script src="script.js"></script>
+
+<script>
+
+const tabs = document.querySelectorAll(".tab");
+const contents = document.querySelectorAll(".tab-content");
+
+tabs.forEach(tab=>{
+
+    tab.addEventListener("click",()=>{
+
+        tabs.forEach(t=>t.classList.remove("active"));
+        contents.forEach(c=>c.classList.remove("active"));
+
+        tab.classList.add("active");
+
+        document
+            .getElementById(tab.dataset.tab)
+            .classList.add("active");
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>
