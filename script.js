@@ -34,6 +34,7 @@ async function convertKML() {
 
     const groupName = document.getElementById("groupName").value;
     const groupId = Number(document.getElementById("groupId").value);
+    const geofenceId = Number(document.getElementById("geofenceId").value);
     const polygonColor = colorPicker.value;
 
     const result = {
@@ -46,13 +47,13 @@ async function convertKML() {
         geofences: []
     };
 
-    let geofenceId = 1;
+   let currentId = geofenceId;
 
     for (const placemark of placemarks) {
 
         const geofence = parsePlacemark(
             placemark,
-            geofenceId++,
+            currentId++,
             groupId,
             polygonColor
         );
