@@ -14,6 +14,7 @@ convertBtn.addEventListener("click", convertKML);
 async function convertKML() {
 
     const file = fileInput.files[0];
+    const geofenceName = file.name.replace(/\.[^/.]+$/, "");
 
     if (!file) {
         alert("Please choose a KML file.");
@@ -33,7 +34,8 @@ async function convertKML() {
     }
 
     const groupName = document.getElementById("groupName").value;
-    const groupId = Number(document.getElementById("groupId").value);
+    // const groupId = Number(document.getElementById("groupId").value);
+    const groupId = 1;
     const polygonColor = colorPicker.value;
 
     const result = {
@@ -54,7 +56,8 @@ async function convertKML() {
             placemark,
             geofenceId++,
             groupId,
-            polygonColor
+            polygonColor,
+            geofenceName
         );
 
         if (geofence)
@@ -72,13 +75,15 @@ function parsePlacemark(
     placemark,
     id,
     groupId,
-    polygonColor
+    polygonColor,
+    geofenceName
 ) {
 
-    const name =
-        placemark.getElementsByTagName("description")[0]?.textContent ||
-        placemark.getElementsByTagName("name")[0]?.textContent ||
-        `Polygon ${id}`;
+    // const name =
+    //     placemark.getElementsByTagName("description")[0]?.textContent ||
+    //     placemark.getElementsByTagName("name")[0]?.textContent ||
+    //     `Polygon ${id}`;
+    const name = geofenceName;
 
     const coordinateNode =
         placemark.getElementsByTagName("coordinates")[0];
