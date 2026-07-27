@@ -67,7 +67,7 @@ async function convertKML() {
 
     output.textContent = JSON.stringify(result, null, 4);
 
-    downloadGexp(result);
+    downloadGexp(result, geofenceName);
 
 }
 
@@ -145,7 +145,7 @@ function parseCoordinates(text) {
 
 }
 
-function downloadGexp(json) {
+function downloadGexp(json, fileName) {
 
     const blob = new Blob(
 
@@ -163,7 +163,7 @@ function downloadGexp(json) {
 
     a.href = url;
 
-    a.download = "geofence.gexp";
+    a.download = `${fileName}.gexp`;
 
     a.click();
 
