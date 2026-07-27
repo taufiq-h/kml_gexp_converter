@@ -40,7 +40,7 @@ async function convertKML() {
         groups: [
             {
                 id: groupId,
-                name: groupName
+                title: groupName
             }
         ],
         geofences: []
