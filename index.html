@@ -24,13 +24,13 @@
         <button
             class="tab active"
             data-tab="singleTab">
-            Single Geofence
+            Single KML
         </button>
 
         <button
             class="tab"
             data-tab="groupTab">
-            Group Geofence
+            Multi KML
         </button>
 
     </div>
@@ -134,9 +134,27 @@
 
         <h3>Result</h3>
 
-        <pre id="output">
-Waiting for conversion...
-        </pre>
+        <textarea
+            id="output"
+            rows="22"
+            spellcheck="false"
+            readonly
+        >
+        Waiting for conversion...
+        </textarea>
+
+        <br><br>
+
+        <button id="editBtn">
+            Edit JSON
+        </button>
+
+        <button
+            id="downloadBtn"
+            disabled
+        >
+            Download GEXP
+        </button>
 
     </div>
 

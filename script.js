@@ -11,6 +11,11 @@ const convertGroupBtn = document.getElementById("convertGroupBtn");
 const groupColorPicker = document.getElementById("groupPolygonColor");
 const groupColorValue = document.getElementById("groupColorValue");
 
+const downloadBtn = document.getElementById("downloadBtn");
+
+let currentJson = null;
+let currentFileName = "";
+
 colorPicker.addEventListener("input", () => {
     colorValue.textContent = colorPicker.value;
 });
@@ -79,11 +84,19 @@ async function convertKML() {
 
     }
 
-    output.textContent = JSON.stringify(result, null, 4);
+    currentJson = result;
 
-    downloadGexp(result, geofenceName);
+    currentFileName = geofenceName;
+
+    output.value = JSON.stringify(result, null, 4);
+
+    output.readOnly = true;
+    editBtn.textContent = "Edit JSON";
+
+    downloadBtn.disabled = false;
 
 }
+
 
 async function convertGroup() {
 
@@ -154,10 +167,16 @@ async function convertGroup() {
 
     }
 
-    output.textContent =
-        JSON.stringify(result, null, 4);
+    currentJson = result;
 
-    downloadGexp(result, groupTitle);
+    currentFileName = groupTitle;
+
+    output.value = JSON.stringify(result, null, 4);
+
+    output.readOnly = true;
+    editBtn.textContent = "Edit JSON";
+
+    downloadBtn.disabled = false;
 
 }
 
@@ -235,6 +254,36 @@ function parseCoordinates(text) {
 
 }
 
+downloadBtn.addEventListener("click", () => {
+
+    try {
+
+        const json = JSON.parse(output.value);
+
+        let fileName;
+
+        if (json.geofences.length === 1) {
+
+            // Single KML
+            fileName = json.geofences[0].name;
+
+        } else {
+
+            // Group KML
+            fileName = json.groups[0].title;
+
+        }
+
+        downloadGexp(json, fileName);
+
+    } catch {
+
+        alert("Invalid JSON.\nPlease fix the JSON before downloading.");
+
+    }
+
+});
+
 function downloadGexp(json, fileName) {
 
     const blob = new Blob(
@@ -260,3 +309,14 @@ function downloadGexp(json, fileName) {
     URL.revokeObjectURL(url);
 
 }
+
+const editBtn = document.getElementById("editBtn");
+
+editBtn.addEventListener("click",()=>{
+
+    output.readOnly = !output.readOnly;
+
+    editBtn.textContent =
+        output.readOnly ? "Edit JSON" : "Lock JSON";
+
+});
